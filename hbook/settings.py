@@ -142,9 +142,9 @@ CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 
 CORS_ORIGIN_WHITELIST = (
-    'localhost:4200',
-    'localhost:8000',
-    'hashblog.herokuapp.com'
+    'http://localhost:4200',
+    'http://localhost:8000',
+    'https://hashblog.herokuapp.com'
 )
 
 CSRF_COOKIE_SECURE = False

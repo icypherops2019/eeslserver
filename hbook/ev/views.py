@@ -22,41 +22,27 @@ class HistoryViewSets(ModelViewSet):
     pass
 
 def uploaddata(request):
-    y,z = int(request.GET.get("y", "0")), int(request.GET.get("z", "10"))
+    y,z = int(request.GET.get("y", "0")), int(request.GET.get("z", "1000"))
     file = open("hbook/ev/csvjson.json", "r")
     import json
     data = json.loads(file.read())
     file.close()
     cols = [x for x in data[0].keys() if x not in ['latitude', 'longitude', 'Dealer', 'Address']]
-    # pushing this values as type 
-    d = {}
-    for x in cols:
-        # first search for same name
-        t = ChargerType.objects.all().filter(name = x)
-        if len(t) == 0:
-            t = ChargerType()
-            t.name = x
-            t.save()
-        else:
-            t = t[0]
-        d[x] = t
      
     for i in range(len(data)):
         if i<y: continue
         if i>z: break
         x = data[i]
         station = ChargeStation()
-        station.name = "-"
         station.address = x['Address']
         station.dealer = x['Dealer']
         station.lat = x['latitude']
         station.long = x['longitude']
-        station.save()
+        d = {}
         for xx in cols:
-            if x[xx] != 0:
-                point = ChargePoints()
-                point.charge_station = station
-                point.charger_type = d[xx]
-                point.slots = x[xx]
-                point.save()
-    return HttpResponse("")
+            d[xx] = data[i][xx]
+            d[xx+"-a"] = 0
+        station.data = json.dumps(d)
+        station.save()
+    
+    return HttpResponse("Data Uploaded successfully")
