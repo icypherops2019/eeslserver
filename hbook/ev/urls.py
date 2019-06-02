@@ -11,5 +11,6 @@ router.register('charger_points', ChargePointsViewSets)
 
 urlpatterns = [
     url(r'^api/', include(router.urls)),
-    url(r'^uploaddata', uploaddata)
+    url(r'^uploaddata', uploaddata),
+    url(r'^near_point', near_point),
 ]

@@ -1,4 +1,5 @@
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.response import Response
 from .models import *
 from django.http import HttpResponse
 
@@ -20,6 +21,18 @@ class ChargePointsViewSets(ModelViewSet):
 
 class HistoryViewSets(ModelViewSet):
     pass
+
+from rest_framework.decorators import api_view
+
+@api_view(['GET', 'POST', ])
+def near_point(request):
+    lat, long, lat_var, long_var = float(request.GET.get("lat", 0)), float(request.GET.get("long", 0)), float(request.GET.get("lat_var", 1000)), float(request.GET.get("long_var", 1000))
+    stations = ChargeStation.objects.filter(lat__gt=lat-lat_var).filter(lat__lt=lat+lat_var).filter(long__gt=long-long_var).filter(long__lt=long+long_var)
+    return Response(ChargeStationSerializer(stations, many=True, context={'request':request}).data)
+
+
+
+
 
 def uploaddata(request):
     y,z = int(request.GET.get("y", "0")), int(request.GET.get("z", "1000"))
